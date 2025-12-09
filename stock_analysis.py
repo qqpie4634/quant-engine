@@ -203,7 +203,16 @@ def analyze_stock(ticker):
     """
     try:
         # Fetch data
-        df = yf.download(ticker, period="1y", progress=False) 
+        df = yf.download(ticker, period="1y", progress=False)
+        
+        # Fallback Logic: Detect if it's a potential OTC stock (empty on .TW, might work on .TWO)
+        if df.empty and ticker.endswith(".TW"):
+            alt_ticker = ticker.replace(".TW", ".TWO")
+            print(f"Retry with OTC ticker: {alt_ticker}")
+            df = yf.download(alt_ticker, period="1y", progress=False)
+            if not df.empty:
+                ticker = alt_ticker # Update ticker to the working one
+        
         if df.empty: return None, None
 
         if isinstance(df.columns, pd.MultiIndex):
