@@ -71,6 +71,16 @@ def generate_rule_based_report(metrics, ticker_display_name):
     # 3. Pivots data
     p = metrics['pivots']
     
+    # 4. Scenario Logic (Fix: Ensure Target > Breakout)
+    bull_breakout = p['nh']
+    bull_target = metrics['bb_up']
+    bull_target_desc = "布林上軌"
+    
+    # If BB Upper is below the breakout point (Stock is very strong), look higher to AH
+    if bull_target <= bull_breakout:
+        bull_target = p['ah']
+        bull_target_desc = "CDP AH (最高壓力)"
+    
     report = f"""
 ## {ticker_display_name} 自動化量化決策報告
 **分析日期:** {metrics['date']}
@@ -95,7 +105,7 @@ def generate_rule_based_report(metrics, ticker_display_name):
 | **AL (最低支撐)** | **{p['al']:.2f}** | 強力買點/停損極限 |
 
 ### 4. ⚖️ 劇本模擬 (Scenario Analysis)
-* ☀️ **樂觀劇本 (Bull Case):** 若帶量突破 **{p['nh']:.2f}**，目標挑戰布林上軌 **{metrics['bb_up']:.2f}**。
+* ☀️ **樂觀劇本 (Bull Case):** 若帶量突破 **{bull_breakout:.2f}**，目標挑戰{bull_target_desc} **{bull_target:.2f}**。
 * 🌧️ **悲觀劇本 (Bear Case):** 若跌破季線 **{metrics['ma60']:.2f}** 或 AL **{p['al']:.2f}**，下看 ATR 停損位 **{metrics['stop_loss']:.2f}**。
     """
     return report
