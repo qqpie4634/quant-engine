@@ -7,7 +7,8 @@ import importlib
 # Force reload of backend module to ensure latest code changes (e.g. new metrics) are applied
 # importlib.reload(stock_analysis) # Commented out for Production speed
 
-st.set_page_config(page_title="機構級量化分析引擎", layout="wide", page_icon="🏛️")
+# Mobile Optimization: switch to "centered" layout
+st.set_page_config(page_title="機構級量化分析引擎", layout="centered", page_icon="🏛️")
 
 # Custom CSS for "Institutional" look
 st.markdown("""
@@ -211,11 +212,15 @@ if run_btn:
                         f'</div>', unsafe_allow_html=True)
             st.progress(score/10)
             
-            # Layout: KPI row
-            col1, col2, col3, col4 = st.columns(4)
+            # Layout: KPI - Split into 2x2 grid for better Mobile/Portrait view
+            # Row 1
+            col1, col2 = st.columns(2)
             col1.metric("收盤價 (Close)", f"{metrics['close']:.2f}", 
                         delta=f"{(metrics['close']-metrics['prev_close']):.2f} ({(metrics['close']-metrics['prev_close'])/metrics['prev_close']*100:.1f}%)")
             col2.metric("趨勢 (Trend)", f"{metrics['trend']}")
+            
+            # Row 2
+            col3, col4 = st.columns(2)
             col3.metric("量能狀態 (Vol)", f"{metrics['volume']/metrics['mv5']:.1f}x 均量", 
                         delta=f"{metrics['vol_change']:.1f}% vs 昨日", delta_color="off")
             col4.metric("K線型態 (Pattern)", metrics['pattern'])
