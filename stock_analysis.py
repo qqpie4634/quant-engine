@@ -1,10 +1,9 @@
 import yfinance as yf
 import pandas as pd
-import pandas_ta as ta
 import numpy as np
 import streamlit as st
 
-# Suppress pandas_ta warnings if necessary
+# Suppress warnings
 import warnings
 warnings.filterwarnings("ignore")
 
