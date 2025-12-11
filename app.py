@@ -5,7 +5,7 @@ import stock_analysis
 import importlib
 
 # Force reload of backend module to ensure latest code changes (e.g. new metrics) are applied
-importlib.reload(stock_analysis)
+# importlib.reload(stock_analysis) # Commented out for Production speed
 
 st.set_page_config(page_title="機構級量化分析引擎", layout="wide", page_icon="🏛️")
 

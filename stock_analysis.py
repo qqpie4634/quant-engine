@@ -1,7 +1,14 @@
 import yfinance as yf
 import pandas as pd
+import pandas_ta as ta
 import numpy as np
+import streamlit as st
 
+# Suppress pandas_ta warnings if necessary
+import warnings
+warnings.filterwarnings("ignore")
+
+@st.cache_data(ttl=300) # Cache data for 5 minutes
 def calculate_rsi(data, window=14):
     delta = data.diff()
     gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
@@ -196,6 +203,7 @@ TW_STOCK_NAMES = {
     "INTC": "英特爾 (Intel)"
 }
 
+@st.cache_data(ttl=300) # Cache data for 5 minutes
 def analyze_stock(ticker):
     """
     Fetches data and calculates indicators.
